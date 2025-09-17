@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .shadow-even {
+    box-shadow: 0 0 10px rgba(159, 159, 159, 0.25);
+  }
+}
