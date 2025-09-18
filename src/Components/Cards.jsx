@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import MaxProfitCounter from "./MaxProfitCounter";
 import { SquareArrowOutUpRight } from "lucide-react";
 

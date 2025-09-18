@@ -1,6 +1,6 @@
-import { Navigate, NavLink } from "react-router";
+import { NavLink } from "react-router";
 import logo from "../assets/react.svg";
-import { LucideArrowDownNarrowWide, PlusIcon, PodcastIcon } from "lucide-react";
+import { PlusIcon} from "lucide-react";
 
 const NavBar = () => {
 

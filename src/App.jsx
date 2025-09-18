@@ -1,5 +1,3 @@
-import React from 'react'
-import NavBar from './Components.jsx/NavBar'
 import { Route, Routes } from 'react-router'
 import Layout from './Layout'
 import Home from './Pages/Home'
