@@ -5,7 +5,7 @@ import { LucideArrowDownNarrowWide, PlusIcon, PodcastIcon } from "lucide-react";
 const NavBar = () => {
 
   return (
-    <div className="flex justify-between bg-white py-3 px-20 items-center shadow-xs">
+    <div className="flex justify-between bg-white py-3 md:px-40 px-2 items-center shadow-xs">
       <NavLink to={"/"}>
         <img src={logo} alt="Logo" />
       </NavLink>

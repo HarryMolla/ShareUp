@@ -4,7 +4,7 @@ import NavBar from "./Components.jsx/NavBar"
 
 const Layout = () => {
   return (
-    <div className="bg-green-50/50 flex-0 h-screen py-1 w-full ">
+    <div className="bg-gray-50 flex-1 h-full w-full ">
       <NavBar/>
       <Outlet/>
     </div>
