@@ -5,3 +5,12 @@
     box-shadow: 0 0 10px rgba(159, 159, 159, 0.25);
   }
 }
+
+/* Hide scrollbar but still allow scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

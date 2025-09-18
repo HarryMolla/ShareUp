@@ -11,12 +11,12 @@ const App = () => {
   return (
     <div>
     <Routes>
+      <Route path='/login' element={<Login/>}/>
       <Route path='/' element={<Layout/>}>
         <Route index element={<Home/>}/>
         <Route path='/guide' element={<Guide/>}/>
         <Route path='/contact' element={<Contact/>} />
         <Route path='/about' element={<About/>}/>
-        <Route path='/login' element={<Login/>}/>
         <Route path='/productdetail' element={<ProductDetail/>}/>
       </Route>
     </Routes>
