@@ -1,6 +1,6 @@
-import Cards from "../Components.jsx/Cards";
-import Search from "../Components.jsx/Search";
-import Categories from "../Components.jsx/categories";
+import Cards from "../Components/Cards";
+import Search from "../Components/Search";
+import Categories from "../Components/categories";
 
 const Home = () => {
   return (
