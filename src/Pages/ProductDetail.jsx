@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
@@ -7,12 +7,8 @@ import {
   Check,
   Copy,
   Download,
-  Share,
-  Share2,
-  SquareArrowDown,
 } from "lucide-react";
 import { FaShare, FaShareAlt } from "react-icons/fa";
-import { FaShareFromSquare } from "react-icons/fa6";
 import MaxProfitCounter from "../Components/MaxProfitCounter";
 
 const ProductDetail = () => {
@@ -73,7 +69,7 @@ nec lacus facilisis, eget tincidunt lorem bibendum.`;
   };
 
   return (
-    <div className="mx-40 p-4 my-10 grid gap-10">
+    <div className="md:mx-40 p-4 my-10 grid gap-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
           {/* Main Image */}
