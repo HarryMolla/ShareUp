@@ -1,10 +1,28 @@
 import { NavLink } from "react-router";
 import logo from "../assets/react.svg";
 import { FaGoogle } from "react-icons/fa6";
+import { supabase } from "../supabaseClient";
 
 function Login() {
+  async function signInWithGoogle() {
+    // Dynamically set redirect URI based on environment
+    const redirectTo =
+      import.meta.env.MODE === "development"
+        ? "http://localhost:5173/login"
+        : "https://shareupup.vercel.app/login";
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo },
+    });
+
+    if (error) {
+      console.error("Error signing in with Google:", error.message);
+    }
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center  px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl p-8 space-y-10 grid justify-center">
         <NavLink to={"/"}>
           <img className="w-24 h-24 mx-auto" src={logo} alt="Logo" />
@@ -17,7 +35,7 @@ function Login() {
         </div>
         <div className="flex flex-col gap-4">
           <button
-            onClick={""}
+            onClick={signInWithGoogle}
             className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-xl border border-gray-300 hover:shadow-lg transition bg-white text-gray-700 font-medium"
           >
             <FaGoogle size={24} />
