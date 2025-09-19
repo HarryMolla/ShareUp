@@ -1,24 +1,71 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/react.svg";
 import { FaGoogle } from "react-icons/fa6";
 import { supabase } from "../supabaseClient";
+import { useEffect, useState } from "react";
 
 function Login() {
-  async function signInWithGoogle() {
-    // Dynamically set redirect URI based on environment
-    const redirectTo =
-      import.meta.env.MODE === "development"
-        ? "http://localhost:5173/login"
-        : "https://shareupup.vercel.app/login";
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo },
+  async function signInWithGoogle() {
+    const redirectTo =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5173/login"
+    : "https://shareupup.vercel.app/login";
+
+
+    console.log("Signing in with Google...");
+    console.log("redirectTo:", redirectTo);
+    console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
+      });
+
+      if (error) {
+        console.error("Supabase OAuth error:", error);
+      } else {
+        console.log("Supabase OAuth data:", data);
+        if (data?.url) {
+          console.log("Full OAuth URL sent to Google:", data.url);
+        } else {
+          console.log("No OAuth URL returned from Supabase");
+        }
+      }
+    } catch (err) {
+      console.error("Unexpected error during signInWithOAuth:", err);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Checking existing Supabase session...");
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Current session:", session);
+      if (session?.user) {
+        console.log("User already logged in, navigating to /dashboard");
+        navigate("/dashboard");
+      } else {
+        setLoading(false);
+      }
     });
 
-    if (error) {
-      console.error("Error signing in with Google:", error.message);
-    }
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session);
+      if (session?.user) navigate("/dashboard");
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-600">Checking session…</p>
+      </div>
+    );
   }
 
   return (
