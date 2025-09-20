@@ -6,6 +6,7 @@ import Login from './Pages/Login'
 import ProductDetail from './Pages/ProductDetail'
 import Guide from './Pages/Guide'
 import { Contact } from 'lucide-react'
+import Dashboard from './Pages/Dashboard'
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path='/contact' element={<Contact/>} />
         <Route path='/about' element={<About/>}/>
         <Route path='/productdetail' element={<ProductDetail/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
       </Route>
     </Routes>
     </div>
