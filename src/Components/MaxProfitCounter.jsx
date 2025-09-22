@@ -1,13 +1,15 @@
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
-const MaxProfitCounter = () => {
-     const { ref, inView } = useInView({ triggerOnce: true }); // only trigger once
+const MaxProfitCounter = ({ base, max }) => {
+  const { ref, inView } = useInView({ triggerOnce: true }); 
+  const profit = max - base; // calculate max profit
+
   return (
-     <div ref={ref} className="text-3xl font-bold text-green-500">
-      ETB {inView ?  <CountUp end={1000} duration={2} /> : 0} 
+    <div ref={ref} className="text-3xl font-bold text-green-500">
+      ETB {inView ? <CountUp end={profit} duration={2} /> : 0}
     </div>
   );
-}
+};
 
-export default MaxProfitCounter
+export default MaxProfitCounter;

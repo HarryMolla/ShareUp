@@ -1,6 +1,5 @@
 import { NavLink } from "react-router";
 import MaxProfitCounter from "./MaxProfitCounter";
-import { SquareArrowOutUpRight } from "lucide-react";
 
 const Cards = () => {
   return (

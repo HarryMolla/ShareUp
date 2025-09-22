@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Monitor,
   Shirt,
@@ -11,6 +11,7 @@ import {
   ChevronDownIcon,
   CloudUpload,
 } from "lucide-react";
+import MaxProfitCounter from "../Components/MaxProfitCounter";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -55,6 +56,9 @@ function Dashboard() {
     );
     return () => authListener.subscription.unsubscribe();
   }, [navigate]);
+
+  
+
 
   // Fetch products
   const fetchProducts = async (userId) => {
@@ -463,38 +467,54 @@ function Dashboard() {
         </div>
 
         {/* Products List */}
-        <div className="bg-white shadow-md rounded-xl p-6">
-          <h2 className="text-xl font-semibold mb-6">Your Products</h2>
-          {products.length === 0 ? (
-            <p className="text-gray-500">No products added yet.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-6">
-              {products.map((p) => (
-                <div key={p.id} className="border rounded-lg p-4 flex gap-4">
-                  {p.thumbnail_url && (
-                    <img
-                      src={p.thumbnail_url}
-                      alt={p.title}
-                      className="w-24 h-24 object-cover rounded"
-                    />
-                  )}
-                  <div>
-                    <h3 className="font-bold text-lg">{p.title}</h3>
-                    <p className="text-gray-600 text-sm mb-1">
-                      {p.description}
-                    </p>
-                    <p className="text-green-700 text-sm font-medium">
-                      {p.base_price.toFixed(2)} ETB – {p.max_price.toFixed(2)}{" "}
-                      ETB
-                    </p>
-                    <p className="text-gray-400 text-xs">{p.category}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <div className="grid grid-cols-3 rounded-xl gap-5">
+  {products.length === 0 ? (
+    <p className="text-gray-500">No products added yet.</p>
+  ) : (
+    products.map((p) => (
+      <NavLink key={p.id} to={`/productdetail/${p.id}`}>
+        <div className="bg-white rounded-2xl">
+          
+
+          <div className="bg-white rounded-2xl overflow-hidden">
+  <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+    <img className="w-full h-full object-cover object-center transform transition-transform duration-300 hover:scale-105"
+         src={p.thumbnail_url} alt={p.title} />
+  </div>
+
+  <div className="px-4 pb-6 pt-4">
+    <h1 className="text-lg font-bold text-gray-700 line-clamp-1">{p.title}</h1>
+    <p className="text-gray-400 line-clamp-1">{p.description}</p>
+
+    <div className="flex divide-x-2 divide-gray-100 justify-between mt-4">
+      <div className="w-1/2 min-w-0 text-left">
+        <p className="text-gray-400">Base Price (ETB)</p>
+        <p className="font-medium text-lg text-gray-700">{p.base_price}</p>
       </div>
+      <div className="w-1/2 min-w-0 text-right">
+        <p className="text-gray-400">Max Retail (ETB)</p>
+        <p className="font-medium text-lg text-gray-700">{p.max_price}</p>
+      </div>
+    </div>
+
+    <div className="flex justify-center mt-4">
+      <p className="text-gray-400 font-normal text-center">
+        Max Profit
+        
+          <MaxProfitCounter base={p.base_price} max={p.max_price} />
+      </p>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </NavLink>
+    ))
+  )}
+</div>
+
+        </div>
+      
     </div>
   );
 }
