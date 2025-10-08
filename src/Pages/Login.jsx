@@ -1,63 +1,44 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/react.svg";
 import { FaGoogle } from "react-icons/fa6";
-import { supabase } from "../supabaseClient";
 import { useEffect, useState } from "react";
+import { auth, provider } from "../firebase"; // ← import from firebase.js
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 
 function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   async function signInWithGoogle() {
-    const redirectTo =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:5173/login"
-    : "https://shareupup.vercel.app/login";
-
-
-    console.log("Signing in with Google...");
-    console.log("redirectTo:", redirectTo);
-    console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
-
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo },
-      });
+      console.log("Signing in with Google via Firebase...");
+      const result = await signInWithPopup(auth, provider);
 
-      if (error) {
-        console.error("Supabase OAuth error:", error);
-      } else {
-        console.log("Supabase OAuth data:", data);
-        if (data?.url) {
-          console.log("Full OAuth URL sent to Google:", data.url);
-        } else {
-          console.log("No OAuth URL returned from Supabase");
-        }
+      // The signed-in user info
+      const user = result.user;
+      console.log("Firebase user:", user);
+
+      if (user) {
+        navigate("/dashboard");
       }
-    } catch (err) {
-      console.error("Unexpected error during signInWithOAuth:", err);
+    } catch (error) {
+      console.error("Firebase Google sign-in error:", error);
     }
   }
 
   useEffect(() => {
-    console.log("Checking existing Supabase session...");
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Current session:", session);
-      if (session?.user) {
-        console.log("User already logged in, navigating to /dashboard");
+    console.log("Checking Firebase auth state...");
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User already logged in:", user.email);
         navigate("/dashboard");
       } else {
+        console.log("No active user session.");
         setLoading(false);
       }
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", _event, session);
-      if (session?.user) navigate("/dashboard");
-    });
-
-    return () => listener.subscription.unsubscribe();
+    return () => unsubscribe();
   }, [navigate]);
 
   if (loading) {

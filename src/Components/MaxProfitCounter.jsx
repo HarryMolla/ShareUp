@@ -7,7 +7,7 @@ const MaxProfitCounter = ({ base, max }) => {
 
   return (
     <div ref={ref} className="text-3xl font-bold text-green-500">
-      ETB {inView ? <CountUp end={profit} duration={2} /> : 0}
+      ETB {inView ? <CountUp end='' duration={2} /> : 0}
     </div>
   );
 };
