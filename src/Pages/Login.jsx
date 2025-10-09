@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/react.svg";
 import { FaGoogle } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { auth, provider } from "../firebase"; // ← import from firebase.js
+import { auth, provider } from "../firebase"; 
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 
 function Login() {
@@ -12,13 +12,15 @@ function Login() {
   async function signInWithGoogle() {
     try {
       console.log("Signing in with Google via Firebase...");
+
+      // Use popup and ensure redirect points to your Vercel domain
       const result = await signInWithPopup(auth, provider);
 
-      // The signed-in user info
       const user = result.user;
       console.log("Firebase user:", user);
 
       if (user) {
+        // Explicitly navigate to your dashboard on your Vercel domain
         navigate("/dashboard");
       }
     } catch (error) {
@@ -27,7 +29,6 @@ function Login() {
   }
 
   useEffect(() => {
-    console.log("Checking Firebase auth state...");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("User already logged in:", user.email);

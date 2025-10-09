@@ -15,7 +15,6 @@ import {
 } from "../firebase";
 import { 
   onAuthStateChanged, 
-  signOut 
 } from "firebase/auth";
 import axios from "axios";
 
@@ -30,6 +29,7 @@ import {
   CloudUpload,
 } from "lucide-react";
 import MaxProfitCounter from "../Components/MaxProfitCounter";
+import NavSide from "../Components/NavSide";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -188,12 +188,6 @@ function Dashboard() {
     }
   };
 
-  // -------------------- Logout --------------------
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/login");
-  };
-
   // -------------------- Render --------------------
   if (loading) {
     return (
@@ -204,18 +198,12 @@ function Dashboard() {
   }
 
   return (
-    <div className="flex h-full w-full py-6">
-      <div className="md:w-full md:mx-40 mx-4">
-        <header className="grid md:grid-cols-2 gap-4 justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Welcome, {user.email}</h1>
-          <button
-            onClick={handleLogout}
-            className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 
-                       focus:outline-none focus:ring-red-300 font-medium rounded-lg 
-                       text-sm px-5 py-2.5 text-center"
-          >
-            Logout
-          </button>
+    <div className="flex h-full w-full py-6 px-6 gap-4 ">
+      <NavSide/>
+      <div className="w-full">
+        <header className="flex md:flex-cols-2 justify-between items-center mb-4 bg-white p-6 rounded-2xl w-full overflow-hidden">
+          <h1 className="text-md font-bold">Welcome, {user.email}</h1>
+          
         </header>
 
         {message.text && (
@@ -231,7 +219,7 @@ function Dashboard() {
         )}
 
         {/* -------------------- Add Product Form -------------------- */}
-        <div className="bg-white shadow-md rounded-xl p-6 mb-10">
+        <div className="bg-white rounded-xl p-6 mb-10">
           <h2 className="text-xl font-semibold mb-6">Add New Product</h2>
           <form onSubmit={handleAddProduct}>
             {/* Product inputs (title, description, prices, category) */}
