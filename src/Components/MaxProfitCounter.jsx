@@ -6,8 +6,8 @@ const MaxProfitCounter = ({ base, max }) => {
   const profit = Number(max) - Number(base);
 
   return (
-    <div ref={ref} className="text-3xl font-bold text-green-500">
-      ETB {inView ? <CountUp end={profit} duration={2} /> : 0}
+    <div ref={ref}>
+      {inView ? <CountUp end={profit} duration={2} /> : 0} ETB 
     </div>
   );
 };

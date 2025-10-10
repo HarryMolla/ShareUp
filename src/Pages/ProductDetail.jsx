@@ -1,111 +1,150 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 import Cards from "../Components/Cards";
-import { Check, Copy, Download } from "lucide-react";
-import { FaShare, FaShareAlt } from "react-icons/fa";
+import { Check, Copy, Download, Forward } from "lucide-react";
+import { FaShare } from "react-icons/fa";
 import MaxProfitCounter from "../Components/MaxProfitCounter";
 
 const ProductDetail = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [copiedField, setCopiedField] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setProduct({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          console.error("Product not found in Firestore");
+          setProduct(null);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
   const downloadZip = async () => {
+    if (!product) return;
     const zip = new JSZip();
 
-    // Add product text
-    zip.file("product-title.txt", productTitle);
-    zip.file("product-description.txt", productDescription);
+    zip.file("product-title.txt", product.title);
+    zip.file("product-description.txt", product.description);
 
     // Add images
     const imgFolder = zip.folder("images");
-    for (let i = 0; i < images.length; i++) {
-      const imgData = await fetch(images[i]).then((res) => res.blob());
+    const allImages = product.gallery_urls?.length
+      ? product.gallery_urls
+      : [product.thumbnail_url];
+
+    for (let i = 0; i < allImages.length; i++) {
+      const imgData = await fetch(allImages[i]).then((res) => res.blob());
       imgFolder.file(`image-${i + 1}.jpg`, imgData);
     }
 
-    // Generate the zip
     zip.generateAsync({ type: "blob" }).then((content) => {
-      saveAs(content, "product.zip");
+      saveAs(content, `${product.title.replace(/\s+/g, "_")}.zip`);
     });
   };
 
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [copiedField, setCopiedField] = useState(""); // "title" or "content"
-
-  const images = [
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/1/200/300",
-  ];
-
-  const productTitle =
-    "Amazing Product of the same that need to longer than wha";
-  const productDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-condimentum tortor sem, in semper nisl bibendum eu. Proin vitae
-vehicula arcu. Vestibulum ante ipsum primis in faucibus orci
-luctus et ultrices posuere cubilia curae;tus et ultrices posuere cubilia curtus et ultrices posuere cubilia cur
-tus et ultrices posuere cubilia curtus et ultrices posuere cubilia cur
- Mauris varius turpis tus et ultrices posuere cubilia cur
- Mauris varius turpis tus et ultrices posuere cubilia cur
- Mauris varius turpis tus et ultrices posuere cubilia cur
-nec lacus facilisis, eget tincidunt lorem bibendum.`;
-
+  // -------------------- Copy Text Handlers --------------------
   const handleCopy = (text, field) => {
     navigator.clipboard
       .writeText(text)
       .then(() => {
         setCopiedField(field);
-        setTimeout(() => setCopiedField(""), 3000); // reset after 3s
+        setTimeout(() => setCopiedField(""), 3000);
       })
       .catch((err) => console.error("Failed to copy!", err));
   };
 
-  return (
-    <div className="md:mx-40 p-4 md:my-10 grid gap-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          {/* Main Image */}
-          <img
-            src={images[selectedImage]}
-            alt={`Product ${selectedImage}`}
-            className="w-full h-auto md:max-h-[500px] max-h-[400px] object-cover rounded-xl mb-4"
-          />
+  // -------------------- Render --------------------
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[70vh] text-gray-500">
+        Loading product details…
+      </div>
+    );
+  }
 
+  if (!product) {
+    return (
+      <div className="flex justify-center items-center min-h-[70vh] text-gray-500">
+        Product not found.
+      </div>
+    );
+  }
+
+  // Use gallery URLs if available, otherwise fallback to single thumbnail
+  const images = product.gallery_urls?.length
+    ? product.gallery_urls
+    : [product.thumbnail_url];
+
+  return (
+    <div className="md:mx-10 p-4 md:my-5 grid gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Photos */}
+        <div className="flex flex-col md:flex-row gap-3 w-full">
           {/* Thumbnails */}
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+          <div className="order-2 md:order-1 flex md:flex-col overflow-x-auto md:overflow-y-auto md:max-h-[80vh] scroll-smooth scrollbar-hide">
             {images.map((img, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
-                className={`flex-shrink-0 w-20 h-20 md:w-30 md:h-30 rounded-lg overflow-hidden ${
-                  selectedImage === index ? "border-3 border-green-500" : "border-white"
+                aria-label={`Select image ${index + 1}`}
+                aria-selected={selectedImage === index}
+                className={`flex-shrink-0 w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border-3 ${
+                  selectedImage === index
+                    ? "border-green-500"
+                    : "border-gray-300/0"
                 }`}
               >
                 <img
                   src={img}
-                  alt={`Thumbnail ${index}`}
+                  alt={`Thumbnail ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
               </button>
             ))}
           </div>
+
+          {/* Main Image */}
+          <div className="order-1 md:order-2 flex-1 rounded-xl overflow-hidden mt-4 md:mt-0">
+            <img
+              src={images[selectedImage]}
+              alt={`Product ${selectedImage + 1}`}
+              className="md:w-[80vh] w-full md:h-[80vh] object-cover rounded-xl"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col justify-between">
+        <div className="grid md:grid-cols-2 grid-cols-1 justify-between w-full gap-3">
           {/* Product Infos */}
-          <div className="bg-white rounded-3xl p-4">
+          <div className="rounded-2xl bg-white p-4 md:h-[80vh] h-[50vh]">
             <div className="divide-y-1 divide-gray-100">
-              {/* Title with copy button */}
+              {/* Title */}
               <div className="relative flex items-start mb-2 space-x-2 pt-8 pb-5">
-                <h1 className="text-1xl md:text-lg font-bold text-gray-800">
-                  {productTitle}
+                <h1 className="text-1xl md:text-md font-bold text-gray-600 line-clamp-2">
+                  {product.title}
                 </h1>
                 <button
-                  onClick={() => handleCopy(productTitle, "title")}
+                  onClick={() => handleCopy(product.title, "title")}
                   className="absolute top-0 right-0 flex items-center gap-2 border border-gray-100 hover:bg-gray-50 text-gray-800 px-2 py-1 rounded-lg text-sm transition"
                 >
                   {copiedField === "title" ? (
@@ -122,25 +161,19 @@ nec lacus facilisis, eget tincidunt lorem bibendum.`;
                 </button>
               </div>
 
-              {/* Description with copy button */}
-              <div className="relative flex items-start mb-2  rounded-2xl pb-4">
-                {/* Scrollable descripiton */}
+              {/* Description */}
+              <div className="relative flex items-start mb-2 rounded-2xl pb-4">
                 <div className="flex-1 relative">
-                  <div className="max-h-[15em] overflow-y-auto pr-2 scrollbar-hide">
+                  <div className="md:h-100 h-55 overflow-y-auto pr-2 scrollbar-hide">
                     <p className="text-gray-600 whitespace-pre-wrap pt-8">
-                      {productDescription}
+                      {product.description}
                     </p>
                   </div>
-                  {/* Bottom fade overlay */}
                   <div className="pointer-events-none absolute bottom-0 left-0 w-full h-[3.5em] bg-gradient-to-t from-white to-transparent"></div>
-
-                  {/* Top fade overlay */}
                   <div className="pointer-events-none absolute top-0 left-0 w-full h-[3.5em] bg-gradient-to-b from-white to-transparent"></div>
                 </div>
-
-                {/* Copy button */}
                 <button
-                  onClick={() => handleCopy(productDescription, "content")}
+                  onClick={() => handleCopy(product.description, "content")}
                   className="absolute top-1 right-0 flex items-center gap-1 border border-gray-100 hover:bg-gray-50 text-gray-800 px-2 py-1 rounded-lg text-sm transition"
                 >
                   {copiedField === "content" ? (
@@ -157,47 +190,55 @@ nec lacus facilisis, eget tincidunt lorem bibendum.`;
                 </button>
               </div>
             </div>
-            <div>
-        <div className="flex divide-x-2 divide-gray-100 mb-6">
-          <div className="w-1/2 text-left">
-            <p className="text-gray-400">Base Price</p>
-            <p className="font-bold text-lg text-gray-700">500 ETB</p>
           </div>
-          <div className="w-1/2 text-right">
-            <p className="text-gray-400">Max Retail</p>
-            <p className="font-bold text-lg text-gray-700">800 ETB</p>
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <div>
-            <p className="text-gray-400 font-medium text-center">
-              Max Profit
-              <span className="font-bold text-3xl text-green-400 block">
-                <MaxProfitCounter />
-              </span>
-            </p>
+
+          <div className="flex flex-col p-4 bg-white rounded-2xl justify-between">
+            {/* Prices & Max Profit */}
+            <div className="grid gap-2 divide-y-1 divide-gray-200 border border-gray-200 rounded-lg p-4">
+              <div className="grid gap-1">
+                <div className="flex justify-between">
+                  <p className="text-gray-400">Base Price</p>
+                  <p className="font-bold text-lg text-gray-500">
+                    {product.base_price} ETB
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-400">Max Retail</p>
+                  <p className="font-bold text-lg text-gray-500">
+                    {product.max_price} ETB
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-gray-400">Max Profit</p>
+                <p className="font-bold text-2xl text-green-500">
+                    <MaxProfitCounter
+                      base={product.base_price}
+                      max={product.max_price}
+                    />
+                  </p>
+              </div>
+            </div>
+            {/* Buttons */}
+            <div className="grid col-1 w-full gap-2 h-fit">
+              <button
+                onClick={downloadZip}
+                className="flex justify-center gap-3 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition font-medium"
+              >
+                <Download /> Download Zip File
+              </button>
+              <button
+                onClick={() => console.log("Share clicked")}
+                className="flex justify-center gap-3 text-green-500 py-3 rounded-xl border-2 border-green-500 hover:bg-green-100 transition font-medium"
+              >
+                <Forward size={24} /> Share
+              </button>
+            </div>
           </div>
         </div>
       </div>
-          </div>
 
-          <div className="flex col-end-2 gap-2">
-            <button
-              onClick={downloadZip}
-              className="flex justify-center w-3xl gap-3 bg-green-600 text-white py-3 px-6 rounded-xl hover:bg-green-700 transition font-medium mt-4"
-            >
-              <Download /> Download Zip File
-            </button>
-            <button
-              onClick={""}
-              className="flex justify-center gap-3 text-green-500 py-3 px-6 rounded-xl border-2 border-green-500 hover:bg-green-100 transition font-medium mt-4"
-            >
-              <FaShare size={24} />
-            </button>
-          </div>
-        </div>
-      </div>
-
+      {/* Related Products */}
       <div>
         <h1 className="text-1xl md:text-2xl font-bold mb-10">
           Related Products

@@ -198,7 +198,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="flex h-full w-full py-6 px-6 gap-4 ">
+    <div className="flex h-full w-full py-6 md:px-6 px-3 gap-4 ">
       <NavSide/>
       <div className="w-full">
         <header className="flex md:flex-cols-2 justify-between items-center mb-4 bg-white p-6 rounded-2xl w-full overflow-hidden">
@@ -430,9 +430,10 @@ function Dashboard() {
           ) : (
             products.map((p) => (
               <NavLink key={p.id} to={`/productdetail/${p.id}`}>
-                <div className="bg-white rounded-2xl overflow-hidden">
+                <div className="overflow-hidden bg-white  rounded-2xl hover:scale-103 transform transition-transform duration-300">
                   <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
-                    <img className="w-full h-full object-cover object-center" src={p.thumbnail_url} alt={p.title} />
+                    <img className="w-full h-full object-cover object-center transform transition-transform duration-900 hover:scale-115" 
+                    src={p.thumbnail_url} alt={p.title} />
                   </div>
                   <div className="px-4 pb-6 pt-4">
                     <h1 className="text-lg font-bold text-gray-700 line-clamp-1">{p.title}</h1>
@@ -449,7 +450,7 @@ function Dashboard() {
                     </div>
                     <div className="flex justify-center mt-4">
                       <p className="text-gray-400 font-normal text-center">
-                        Max Profit <MaxProfitCounter base={p.base_price} max={p.max_price} />
+                        Max Profit <span className="text-3xl font-bold text-green-500"><MaxProfitCounter base={p.base_price} max={p.max_price} /></span>
                       </p>
                     </div>
                   </div>
