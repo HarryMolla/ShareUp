@@ -36,14 +36,14 @@ const Cards = () => {
   if (message?.type === "error") return <p>{message.text}</p>;
 
   return (
-    <div className="grid md:grid-cols-3 rounded-xl gap-5">
+    <div className="grid md:grid-cols-3 rounded-xl md:gap-6 gap-4">
       {products.length === 0 ? (
         <p className="text-gray-500">No Products</p>
       ) : (
         products.map((p) => (
           <NavLink key={p.id} to={`/productdetail/${p.id}`}>
-            <div className="overflow-hidden bg-white rounded-2xl hover:scale-103 transform transition-transform duration-300">
-              <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+            <div className="overflow-hidden bg-white rounded-2xl hover:shadow-2xl transform transition-shadow duration-300">
+              <div className="w-full h-64 bg-white flex items-center justify-center overflow-hidden">
                 <img
                   loading="lazy"
                   className="w-full h-full object-cover object-center transform transition-transform duration-900 hover:scale-115"

@@ -424,7 +424,7 @@ function Dashboard() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-3 rounded-xl gap-5">
+        <div className="grid md:grid-cols-3 rounded-xl gap-5">
           {products.length === 0 ? (
             <p className="text-gray-500">No products added yet.</p>
           ) : (

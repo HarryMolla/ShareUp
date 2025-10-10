@@ -6,7 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 import Cards from "../Components/Cards";
-import { Check, Copy, Download, Forward } from "lucide-react";
+import { Check, Copy, Download, Forward, Truck } from "lucide-react";
 import { FaShare } from "react-icons/fa";
 import MaxProfitCounter from "../Components/MaxProfitCounter";
 
@@ -164,7 +164,7 @@ const ProductDetail = () => {
               {/* Description */}
               <div className="relative flex items-start mb-2 rounded-2xl pb-4">
                 <div className="flex-1 relative">
-                  <div className="md:h-100 h-55 overflow-y-auto pr-2 scrollbar-hide">
+                  <div className="md:h-105 h-55 overflow-y-auto pr-2 scrollbar-hide">
                     <p className="text-gray-600 whitespace-pre-wrap pt-8">
                       {product.description}
                     </p>
@@ -191,8 +191,8 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col p-4 bg-white rounded-2xl justify-between">
+          {/* Numbers and others */}
+          <div className="flex flex-col p-4 bg-white rounded-2xl justify-between gap-4">
             {/* Prices & Max Profit */}
             <div className="grid gap-2 divide-y-1 divide-gray-200 border border-gray-200 rounded-lg p-4">
               <div className="grid gap-1">
@@ -212,11 +212,46 @@ const ProductDetail = () => {
               <div className="flex justify-between items-center">
                 <p className="text-gray-400">Max Profit</p>
                 <p className="font-bold text-2xl text-green-500">
-                    <MaxProfitCounter
-                      base={product.base_price}
-                      max={product.max_price}
-                    />
-                  </p>
+                  <MaxProfitCounter
+                    base={product.base_price}
+                    max={product.max_price}
+                  />
+                </p>
+              </div>
+            </div>
+            <div className="grid h-fit p-4 rounded-lg border border-gray-200 gap-4">
+              <div className="flex justify-between h-fit">
+                <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
+                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
+                    <Truck />
+                  </span>
+                  Shipping
+                </p>
+                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
+                  Free Delivery
+                </p>
+              </div>
+              <div className="flex justify-between h-fit">
+                <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
+                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
+                    <Truck />
+                  </span>
+                  Shipping
+                </p>
+                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
+                  Free Delivery
+                </p>
+              </div>
+              <div className="flex justify-between h-fit">
+                <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
+                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
+                    <Truck />
+                  </span>
+                  Shipping
+                </p>
+                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
+                  Free Delivery
+                </p>
               </div>
             </div>
             {/* Buttons */}
