@@ -8,7 +8,7 @@ const Layout = () => {
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
-    <div className="bg-gray-50 flex-1 h-full w-full">
+    <div className="bg-gray-100 flex-1 h-full w-full">
       {!shouldHideNavbar && <NavBar />}
       <Outlet />
     </div>
