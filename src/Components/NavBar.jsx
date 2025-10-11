@@ -71,7 +71,7 @@ const NavBar = () => {
           isOpen ? "max-h-40 opacity-100 mt-3" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="flex flex-col bg-white border-t border-gray-200 rounded-md shadow-sm py-3 gap-2">
+        <div className="flex flex-col bg-white border-t border-gray-200 shadow-sm py-3 gap-2">
           <NavLink
             to="/guide"
             className="text-gray-600 font-semibold hover:text-green-500 text-center py-1"
