@@ -52,7 +52,7 @@ const NavBar = () => {
             to="/login"
             className="md:hidden px-2 py-1 border border-gray-400 hover:border-green-500 hover:bg-green-500 text-gray-400 hover:text-white font-bold rounded flex items-center gap-1 text-xs transition-all duration-200"
           >
-            <PlusIcon className="w-3 h-3" /> Add
+            <PlusIcon className="w-4 h-4" /> Add
           </NavLink>
 
           {/* Menu Toggle (Mobile) */}
@@ -60,7 +60,7 @@ const NavBar = () => {
             onClick={toggleMenu}
             className="md:hidden text-gray-700 hover:text-green-600 focus:outline-none transition-all duration-200"
           >
-            {isOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+            {isOpen ? <XIcon className="w-8 h-8" /> : <MenuIcon className="w-8 h-8" />}
           </button>
         </div>
       </div>
