@@ -6,7 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 import Cards from "../Components/Cards";
-import { Check, Copy, Download, Forward, Truck } from "lucide-react";
+import { ArrowBigRight, Check, ChevronRight, Copy, Download, Forward, Phone, PhoneCall, ShieldCheck, Truck, Undo, UserCircle } from "lucide-react";
 import { FaShare } from "react-icons/fa";
 import MaxProfitCounter from "../Components/MaxProfitCounter";
 
@@ -192,7 +192,7 @@ const ProductDetail = () => {
             </div>
           </div>
           {/* Numbers and others */}
-          <div className="flex flex-col p-4 bg-white rounded-2xl justify-between gap-4">
+          <div className="flex flex-col p-4 bg-white rounded-2xl justify-between gap-2">
             {/* Prices & Max Profit */}
             <div className="grid gap-2 divide-y-1 divide-gray-200 border border-gray-200 rounded-lg p-4">
               <div className="grid gap-1">
@@ -219,40 +219,42 @@ const ProductDetail = () => {
                 </p>
               </div>
             </div>
+            {/* Policy */}
             <div className="grid h-fit p-4 rounded-lg border border-gray-200 gap-4">
-              <div className="flex justify-between h-fit">
+              <div className="flex justify-between h-fit items-center">
                 <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
-                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
+                  <span className=" text-green-500">
                     <Truck />
                   </span>
-                  Shipping
-                </p>
-                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
                   Free Delivery
                 </p>
+                <ChevronRight size={14}/>
               </div>
-              <div className="flex justify-between h-fit">
+              <div className="flex justify-between items-center h-fit">
                 <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
-                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
-                    <Truck />
+                  <span className="text-green-500">
+                    <Undo/>
                   </span>
-                  Shipping
+                  Return & Refund policy
                 </p>
-                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
-                  Free Delivery
-                </p>
+                 <ChevronRight size={14}/>
               </div>
-              <div className="flex justify-between h-fit">
+              <div className="flex justify-between h-fit items-center">
                 <p className="flex gap-2 items-center font-medium text-gray-600 text-md">
-                  <span className="p-1 bg-green-50 rounded-sm text-green-500">
-                    <Truck />
+                  <span className="rounded-sm text-green-500">
+                    <ShieldCheck />
                   </span>
-                  Shipping
+                  Security & privacey
                 </p>
-                <p className="py-1 px-3 bg-green-100 rounded-lg text-green-500">
-                  Free Delivery
-                </p>
+                <ChevronRight size={14}/>
               </div>
+            </div>
+            {/* Contacts */}
+            <div className="grid h-fit p-4 rounded-lg border border-gray-200 gap-4">
+              <p className="flex justify-center font-medium text-gray-600">Call to Seller</p>
+              <button className="flex items-center text-lg justify-center gap-3 text-green-500 p-2 bg-green-50 hover:bg-green-500 hover:text-white rounded-md">
+                  <PhoneCall size={16}/> 0943416655
+                </button>
             </div>
             {/* Buttons */}
             <div className="grid col-1 w-full gap-2 h-fit">

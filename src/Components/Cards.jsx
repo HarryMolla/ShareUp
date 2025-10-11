@@ -59,15 +59,15 @@ const Cards = () => {
                 <p className="text-gray-400 line-clamp-1">{p.description}</p>
                 <div className="flex divide-x-2 divide-gray-100 justify-between mt-4">
                   <div className="w-1/2 text-left">
-                    <p className="text-gray-400">Base Price (ETB)</p>
+                    <p className="text-gray-400">Base Price</p>
                     <p className="font-medium text-lg text-gray-700">
-                      {p.base_price}
+                      {p.base_price} ETB
                     </p>
                   </div>
                   <div className="w-1/2 text-right">
-                    <p className="text-gray-400">Max Retail (ETB)</p>
+                    <p className="text-gray-400">Max Retail</p>
                     <p className="font-medium text-lg text-gray-700">
-                      {p.max_price}
+                      {p.max_price} ETB
                     </p>
                   </div>
                 </div>
