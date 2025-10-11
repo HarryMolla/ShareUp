@@ -50,9 +50,9 @@ const NavBar = () => {
           {/* Add Button (Mobile) */}
           <NavLink
             to="/login"
-            className="md:hidden px-2 py-1 border border-gray-400 hover:border-green-500 hover:bg-green-500 text-gray-400 hover:text-white font-bold rounded flex items-center gap-1 text-xs transition-all duration-200"
+            className="md:hidden px-2 py-1 border border-gray-400 hover:border-green-500 hover:bg-green-500 text-gray-400 hover:text-white font-bold rounded flex items-center gap-1 text-sm transition-all duration-200"
           >
-            <PlusIcon className="w-4 h-4" /> Add
+            <PlusIcon className="w-6 h-6" /> Add
           </NavLink>
 
           {/* Menu Toggle (Mobile) */}
